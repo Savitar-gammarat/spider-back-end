@@ -9,17 +9,22 @@ from models.Site import Site
 
 class NewsApi(Resource):
     """
-    :return
+    :return news
     """
     @staticmethod
     def get():
         """
-
-        :return:
+        get all the news ordered by sites
+        :return: news ordered by sites in dict
         """
-        all_news = News.query.order_by(News.datetime.desc()).all()
-        print(all_news)
-        for i in range(len(all_news)):
-            all_news[i] = to_dict(all_news[i])
-        print(all_news)
-        return {"all_news": all_news}, 200
+
+        publishList = Site.query.all()
+        for item in range(len(publishList)):
+            publishList[item] = to_dict(publishList[item])
+        for i in range(len(publishList)):
+
+            all_news = News.query.filter(News.site_id == (i+1)).order_by(News.datetime.desc()).all()
+            for j in range(len(all_news)):
+                all_news[j] = to_dict(all_news[j])
+            publishList[i]["all_news"] = all_news
+        return {"publishList": publishList}, 200
