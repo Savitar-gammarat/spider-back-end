@@ -4,6 +4,7 @@ from flask_cors import CORS
 from configs.config import (DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PASSWORD)
 from configs.database import db
 from resources.NewsApi import NewsApi
+from resources.SearchApi import SearchApi
 
 app = Flask(__name__)
 CORS(app)
@@ -17,7 +18,8 @@ with app.app_context():
     db.init_app(app)    # init db
     db.create_all()     # create tables
 
-api.add_resource(NewsApi, '/api/v0/News')
+api.add_resource(NewsApi, '/api/v0/news')
+api.add_resource(SearchApi, '/api/v0/search')
 
 
 if __name__ == '__main__':

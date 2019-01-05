@@ -14,8 +14,10 @@ class Site(db.Model):
 
     pageviews = db.Column(db.Integer, nullable=True)
 
-    pass1 = db.Column(db.String(255), nullable=True)
+    color = db.Column(db.String(255), nullable=True)
 
-    pass2 = db.Column(db.String(255), nullable=True)
+    logo = db.Column(db.String(255), nullable=True)
+
+    font = db.Column(db.String(255), nullable=True)
 
     site_news = db.relationship('News', backref='site')
