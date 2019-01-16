@@ -1,4 +1,4 @@
-#!D:\JetBrains\Toolbox\Projects\spiderbackend1\venv\Scripts\python.exe
+#!D:\Documents\GitHub\spider-back-end\venv\Scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'pip==10.0.1','console_scripts','pip'
 __requires__ = 'pip==10.0.1'
 import re
