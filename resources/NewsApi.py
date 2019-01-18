@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask_restful import request
+from flask import request
 from configs.database import to_dict
 from models.News import News
 from models.Site import Site
