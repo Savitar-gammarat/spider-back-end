@@ -1,5 +1,5 @@
 from configs.database import db
-from models.Secondary import news_keyword
+from models.Secondary import news_keyword, news_field
 import datetime
 
 
@@ -16,20 +16,16 @@ class News(db.Model):
 
     link = db.Column(db.String(255), nullable=False)
 
-    hot = db.Column(db.Float, nullable=False)
-
-    image = db.Column(db.String(255), nullable=False)
-
-    intro = db.Column(db.Text, nullable=False)
+    hot = db.Column(db.Float, nullable=False, default=0)
 
     datetime = db.Column(db.TIMESTAMP, nullable=False, default=datetime.datetime.now)
 
-    pass1 = db.Column(db.String(255), nullable=True)
+    click = db.Column(db.Integer, nullable=True, default=0)
 
-    pass2 = db.Column(db.String(255), nullable=True)
+    status = db.Column(db.Integer, nullable=True, default=0)
 
-    pass3 = db.Column(db.String(255), nullable=True)
-
-    site_id = db.Column(db.Integer, db.ForeignKey('site.id'))
+    site_id = db.Column(db.Integer, db.ForeignKey('site.id'), nullable=False)
 
     keywords = db.relationship('Keyword', secondary=news_keyword)
+
+    fields = db.relationship('Field', secondary=news_field)
