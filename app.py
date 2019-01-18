@@ -11,7 +11,7 @@ CORS(app)
 api = Api(app)
 # app.config["SQLALCHEMY_DATABASE_URI"] = \
 #     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_SCHEMA}"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:991004@47.101.196.53:3306/techurls"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:991004@47.101.196.53:3306/news-aggregation"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
