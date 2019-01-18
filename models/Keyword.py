@@ -16,8 +16,4 @@ class Keyword(db.Model):
 
     datetime = db.Column(db.TIMESTAMP(), nullable=False, default=datetime.datetime.now)
 
-    pass1 = db.Column(db.String(255), nullable=True)
-
-    pass2 = db.Column(db.String(255), nullable=True)
-
     key_news = db.relationship('News', secondary=news_keyword)
