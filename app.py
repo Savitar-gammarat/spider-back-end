@@ -5,6 +5,9 @@ from configs.config import (DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PASSWORD)
 from configs.database import db
 from resources.NewsApi import NewsApi
 from resources.SearchApi import SearchApi
+from resources.UserApi import UserApi
+from resources.AuthApi import AuthAPI
+
 
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +24,8 @@ with app.app_context():
 
 api.add_resource(NewsApi, '/api/v0/news')
 api.add_resource(SearchApi, '/api/v0/search')
+api.add_resource(UserApi, '/api/v0/register')
+api.add_resource(AuthAPI, '/api/v0/auth')
 
 
 if __name__ == '__main__':
