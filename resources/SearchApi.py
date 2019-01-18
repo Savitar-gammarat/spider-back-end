@@ -35,8 +35,8 @@ class SearchApi(Resource):
     @staticmethod
     def post():
         """
-
-        :return:
+        get the specific news' url
+        :return: news' url
         """
         response = request.get_json()
         search_message = response["search_message"]
