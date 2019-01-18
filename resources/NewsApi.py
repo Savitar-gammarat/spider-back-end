@@ -1,10 +1,10 @@
 from flask_restful import Resource
-from flask_restful import request
+# from flask_restful import request
 from configs.database import to_dict
 from models.News import News
-from models.Keyword import Keyword
-from models.Secondary import news_keyword
 from models.Site import Site
+from models.Field import Field
+from models.Keyword import Keyword
 
 
 class NewsApi(Resource):
@@ -22,7 +22,7 @@ class NewsApi(Resource):
         for item in range(len(publishList)):
             publishList[item] = to_dict(publishList[item])
         for i in range(len(publishList)):
-            all_news_rows = News.query.filter(News.site_id == (i+1)).order_by(News.datetime.desc()).all()
+            all_news_rows = News.query.filter(News.site_id == (i+1)).order_by(News.datetime.desc()).limit(20).all()
             all_news_list = []
             for j in range(len(all_news_rows)):
                 all_news_dict = {}
