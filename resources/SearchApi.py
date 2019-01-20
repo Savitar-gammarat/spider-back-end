@@ -38,14 +38,19 @@ class SearchApi(Resource):
         get the specific news' url
         :return: news' url
         """
-        response = request.get_json()
-        search_message = response["search_message"]
         search_item = {}
         try:
+            response = request.get_json()
+            search_message = response["search_message"]
             result = News.query.filter(News.title == search_message).all()
             search_item["url"] = result[0].link
             search_item["status"] = 0
         except KeyError:
+            return {"error": "lack necessary key"}, 406
+        except IndexError:
             search_item["status"] = 1
-            return {"search_item": search_item}, 405
+            return {
+                       "error": "there is no such news in database",
+                       "search_item": search_item
+                   }, 406
         return {"search_item": search_item}, 200
