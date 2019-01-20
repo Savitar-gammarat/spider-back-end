@@ -5,6 +5,7 @@ from models.News import News
 from models.Site import Site
 from models.Field import Field
 from models.Keyword import Keyword
+from resources.AuthApi import auth
 
 
 class NewsApi(Resource):

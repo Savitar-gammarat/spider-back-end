@@ -47,13 +47,13 @@ class User(db.Model):
         :return: the signature
         """
         serializer = TimedJSONWebSignatureSerializer(SECRET_KEY, expiration)
-        return serializer.dumps({"id":self.id}).decode("utf-8")
+        return serializer.dumps({"id": self.id}).decode("utf-8")
 
     @staticmethod
     def verify_token(token):
         """
         verify the token
-        :param token:
+        :param token: the given signature
         :return: the user information or error message
         """
         serializer = TimedJSONWebSignatureSerializer(SECRET_KEY)
