@@ -55,7 +55,7 @@ class UserApi(Resource):
             db.session.commit()
         except KeyError:
             return {"error": "Lack necessary argument"}, 406
-        return {"status":   "success"}, 201
+        return {"status": "success"}, 201
 
     @auth.login_required
     def put(self):
@@ -63,7 +63,25 @@ class UserApi(Resource):
         change the customization
         :return: user information or error message
         """
-
+        json = request.get_json()
+        try:
+            username = json["username"]
+            customization = json["customization"]
+            user = User.query.filter(User.username == username).first()
+            user.customization = customization
+            db.session.commit()
+            user = User.query.filter(User.username == username).first()
+        except KeyError:
+            return {"error": "Lack necessary argument"}, 406
+        return {
+                    "status": "success",
+                    "user": {
+                        "id": user.id,
+                        "username": user.username,
+                        "email": user.email,
+                        "customization": user.customization
+                    }
+               }, 201
 
     @staticmethod
     def delete():
