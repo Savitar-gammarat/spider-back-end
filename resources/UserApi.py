@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, g
 from configs.database import db
 from models.User import User
 from datetime import datetime
@@ -51,6 +51,9 @@ class UserApi(Resource):
             username = json["username"]
             password = json["password"]
             user = User.query.filter(User.username == username).first()
+            if not User.is_super_admin():
+                if not g.current_user.id == user.id:
+                    return {"error": "you have no rights to do that"}, 403
             user.hash_password(password)
             db.session.commit()
         except KeyError:

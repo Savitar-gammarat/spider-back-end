@@ -1,5 +1,5 @@
 """
-the path of DataBase
+THE PATH OF THE DATABASE
 """
 DB_USER = "root"
 DB_PASSWORD = "991004"
@@ -11,3 +11,8 @@ DB_SCHEMA = "techurls"
 SECRET_KEY, something important!
 """
 SECRET_KEY = "Trump-eat-chicken"
+
+"""
+SUPER_ADMIN
+"""
+SUPER_ADMIN = ["bigdingding"]

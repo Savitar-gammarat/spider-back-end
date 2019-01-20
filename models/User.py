@@ -1,7 +1,8 @@
 from configs.database import db
-from configs.config import SECRET_KEY
+from configs.config import SECRET_KEY, SUPER_ADMIN
 from passlib.apps import custom_app_context
 from itsdangerous import TimedJSONWebSignatureSerializer, SignatureExpired, BadSignature
+from flask import g
 
 
 class User(db.Model):
@@ -65,3 +66,17 @@ class User(db.Model):
             return None  # invalid token
         user = User.query.get(data["id"])
         return user
+
+    @staticmethod
+    def is_super_admin():
+        """
+        verify the user permission
+        :param user_id: the given user_id
+        :return: normal permission(False) or super permission(True)
+        """
+        super_admin = User.query.filter(User.username == SUPER_ADMIN).all()
+        for i in range(len(super_admin)):
+            super_admin[i] = super_admin[i].id
+        if g.current_user.id in super_admin:
+            return True
+        return False
