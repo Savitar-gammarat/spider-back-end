@@ -7,6 +7,7 @@ from models.Field import Field
 from models.Keyword import Keyword
 from resources.AuthApi import auth
 from models.Secondary import news_field
+from models.User import User
 
 
 class NewsApi(Resource):
@@ -189,12 +190,14 @@ class NewsApi(Resource):
             more_news[i] = to_dict(more_news[i])
         return {"more_news": more_news}, 200
 
-    @staticmethod
-    def patch():
+    @auth.login_required
+    def patch(self):
         """
         add fields to one direct news
         :return: success or error message
         """
+        if not User.is_super_admin():
+            return {"error": "you have no rights to do that!"}
         try:
             response = request.get_json()
             news_id = response["news_id"]
@@ -213,9 +216,11 @@ class NewsApi(Resource):
             return {"error": "lack necessary argument!"}, 406
         return {"message": "success"}, 201
 
-    @staticmethod
-    def put():
+    @auth.login_required
+    def put(self):
         response = request.get_json()
+        if not User.is_super_admin():
+            return {"error": "you have no rights to do that!"}
         try:
             news_id = response["news_id"]
             news_title = response["title"]
@@ -231,3 +236,24 @@ class NewsApi(Resource):
         news.title = news_title
         db.session.commit()
         return {"message": "success"}, 201
+
+    @auth.login_required
+    def delete(self):
+        """
+        delete the user information in the database
+        :return: success or error
+        """
+        if not User.is_super_admin():
+            return {"error": "you have no rights to do that!"}
+        json = request.get_json()
+        try:
+            news = News.query.filter(News.id == json["news_id"]).first()
+            if news is None:
+                return {"error": "There is no such news"}, 403
+            db.session.delete(news)
+            db.session.commit()
+        except KeyError:
+            return {"error": "Lack necessary argument"}, 406
+        except AttributeError:
+            return {"error": "Authorization denied"}, 401
+        return {"status": "success", "message": "You have successfully deleted " + news.title + "!"}, 205
