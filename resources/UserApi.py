@@ -3,6 +3,7 @@ from flask import request
 from configs.database import db
 from models.User import User
 from datetime import datetime
+from resources.AuthApi import auth
 
 
 class UserApi(Resource):
@@ -39,21 +40,30 @@ class UserApi(Resource):
             }
         }, 201
 
-    @staticmethod
-    def patch():
+    @auth.login_required
+    def patch(self):
         """
         change the password
         :return: user information or error message
         """
-        pass
+        json = request.get_json()
+        try:
+            username = json["username"]
+            password = json["password"]
+            user = User.query.filter(User.username == username).first()
+            user.hash_password(password)
+            db.session.commit()
+        except KeyError:
+            return {"error": "Lack necessary argument"}, 406
+        return {"status":   "success"}, 201
 
-    @staticmethod
-    def put():
+    @auth.login_required
+    def put(self):
         """
         change the customization
         :return: user information or error message
         """
-        pass
+
 
     @staticmethod
     def delete():

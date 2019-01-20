@@ -24,7 +24,7 @@ with app.app_context():
 
 api.add_resource(NewsApi, '/api/v0/news')
 api.add_resource(SearchApi, '/api/v0/search')
-api.add_resource(UserApi, '/api/v0/register')
+api.add_resource(UserApi, '/api/v0/user')
 api.add_resource(AuthAPI, '/api/v0/auth')
 
 
