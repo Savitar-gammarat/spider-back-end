@@ -198,9 +198,6 @@ class NewsApi(Resource):
         try:
             response = request.get_json()
             news_id = response["news_id"]
-            # news_title = response["title"]
-            # link = response["link"]
-            # site_id = response["site_id"]
             field_id_list = response["field_id_list"]
             news = News.query.filter(News.id == news_id).first()
             field = []
@@ -211,13 +208,26 @@ class NewsApi(Resource):
                 field.append(check_field)
             news.fields = field
             db.session.add(news)
-            # news.site_id = site_id
-            # news.link = link
-            # news.title = news_title
             db.session.commit()
         except KeyError:
-            return {"error": "lack necessary argument!"}
+            return {"error": "lack necessary argument!"}, 406
         return {"message": "success"}, 201
 
     @staticmethod
     def put():
+        response = request.get_json()
+        try:
+            news_id = response["news_id"]
+            news_title = response["title"]
+            link = response["link"]
+            site_id = response["site_id"]
+        except KeyError:
+            return {"error": "lack necessary argument!"}, 406
+        news = News.query.filter(News.id == news_id).first()
+        if news is None:
+            return {"error": "there is no such news!"}, 403
+        news.site_id = site_id
+        news.link = link
+        news.title = news_title
+        db.session.commit()
+        return {"message": "success"}, 201
