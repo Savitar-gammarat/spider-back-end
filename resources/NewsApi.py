@@ -15,8 +15,7 @@ class NewsApi(Resource):
     @staticmethod
     def get():
         """
-        optional arguments: status, site_id
-        get all the news ordered by sites
+        optional arguments: status, site_id, limit
         :return: news ordered by sites in dict
         """
         args = request.args
