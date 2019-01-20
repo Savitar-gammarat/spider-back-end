@@ -13,6 +13,6 @@ SECRET_KEY, something important!
 SECRET_KEY = "Trump-eat-chicken"
 
 """
-SUPER_ADMIN
+SUPER_ADMIN, something important!
 """
 SUPER_ADMIN = ["bigdingding"]
