@@ -1,11 +1,12 @@
 from flask_restful import Resource
 from flask import request
-from configs.database import to_dict
+from configs.database import to_dict, db
 from models.News import News
 from models.Site import Site
 from models.Field import Field
 from models.Keyword import Keyword
 from resources.AuthApi import auth
+from models.Secondary import news_field
 
 
 class NewsApi(Resource):
@@ -187,17 +188,36 @@ class NewsApi(Resource):
         for i in range(len(more_news)):
             more_news[i] = to_dict(more_news[i])
         return {"more_news": more_news}, 200
-    #
-    # @auth.login_required
-    # def patch(self):
-    #     """
-    #     add fields to one direct news
-    #     :return: success or error message
-    #     """
-    #     try:
-    #         response = request.get_json()
-    #         for i in range(len(response)):
-    #             response[i] = response["site_id"]
-    #
-    #     except KeyError:
-    #         return {"error": "lack necessary argument!"}
+
+    @staticmethod
+    def patch():
+        """
+        add fields to one direct news
+        :return: success or error message
+        """
+        try:
+            response = request.get_json()
+            news_id = response["news_id"]
+            # news_title = response["title"]
+            # link = response["link"]
+            # site_id = response["site_id"]
+            field_id_list = response["field_id_list"]
+            news = News.query.filter(News.id == news_id).first()
+            field = []
+            for i in field_id_list:
+                check_field = Field.query.filter(Field.id == i).first()
+                if check_field is None:
+                    return {"error": "please check the field list!"}, 403
+                field.append(check_field)
+            news.fields = field
+            db.session.add(news)
+            # news.site_id = site_id
+            # news.link = link
+            # news.title = news_title
+            db.session.commit()
+        except KeyError:
+            return {"error": "lack necessary argument!"}
+        return {"message": "success"}, 201
+
+    @staticmethod
+    def put():
