@@ -53,7 +53,7 @@ class UserApi(Resource):
             user = User.query.filter(User.username == username).first()
             if not User.is_super_admin():
                 if not g.current_user.id == user.id:
-                    return {"error": "you have no rights to do that"}, 403
+                    return {"error": "you have no rights to do that!"}, 403
             user.hash_password(password)
             db.session.commit()
         except KeyError:
@@ -71,6 +71,9 @@ class UserApi(Resource):
             username = json["username"]
             customization = json["customization"]
             user = User.query.filter(User.username == username).first()
+            if not User.is_super_admin():
+                if not g.current_user.id == user.id:
+                    return {"error": "you have no rights to do that!"}, 403
             user.customization = customization
             db.session.commit()
             user = User.query.filter(User.username == username).first()
@@ -86,10 +89,24 @@ class UserApi(Resource):
                     }
                }, 201
 
-    @staticmethod
-    def delete():
+    @auth.login_required
+    def delete(self):
         """
         delete the user information in the database
         :return: success or error
         """
-        pass
+        json = request.get_json()
+        try:
+            if not User.is_super_admin():
+                return {"error": "you have no rights to do that!"}
+            user = User.query.filter(User.username == json["username"]).first()
+            if user is None:
+                return {"error": "There is no such username"}, 403
+            db.session.delete(user)
+            db.session.commit()
+        except KeyError:
+            return {"error": "Lack necessary argument"}, 406
+        except AttributeError:
+            return {"error": "Authorization denied"}, 401
+        return {"status": "success", "message": "You have successfully deleted " + user.username + "!"}, 205
+

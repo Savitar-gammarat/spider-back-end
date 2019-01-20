@@ -71,7 +71,6 @@ class User(db.Model):
     def is_super_admin():
         """
         verify the user permission
-        :param user_id: the given user_id
         :return: normal permission(False) or super permission(True)
         """
         super_admin = User.query.filter(User.username == SUPER_ADMIN).all()
