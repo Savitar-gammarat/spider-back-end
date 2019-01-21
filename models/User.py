@@ -21,6 +21,8 @@ class User(db.Model):
 
     customization = db.Column(db.String(128), nullable=True)
 
+    last_login_time = db.Column(db.DateTime, nullable=True)
+
     create_time = db.Column(db.DateTime, nullable=False)
 
     # db.relationship
