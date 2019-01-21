@@ -8,14 +8,19 @@ from resources.SearchApi import SearchApi
 from resources.UserApi import UserApi
 from resources.AuthApi import AuthAPI
 from resources.FieldApi import FieldApi
+from resources.CountApi import CounterApi
 
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-# app.config["SQLALCHEMY_DATABASE_URI"] = \
-#     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_SCHEMA}"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:991004@47.101.196.53:3306/news-aggregation"
+app.config["SQLALCHEMY_DATABASE_URI"] = \
+    f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_SCHEMA}"
+"""
+    something important！ Please use Python 3.7+
+    If you are using python 2.0+, please use the under config
+"""
+# app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:991004@47.101.196.53:3306/news-aggregation"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
@@ -28,6 +33,7 @@ api.add_resource(SearchApi, '/api/v0/search')
 api.add_resource(UserApi, '/api/v0/user')
 api.add_resource(AuthAPI, '/api/v0/auth')
 api.add_resource(FieldApi, '/api/v0/field')
+api.add_resource(CounterApi, '/api/v0/counter')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
