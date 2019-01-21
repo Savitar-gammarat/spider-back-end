@@ -21,13 +21,32 @@ class NewsApi(Resource):
         :return: news ordered by sites in dict
         """
         args = request.args
-        # 没有参数的情况，默认遍历所有站点下的status为1的新闻，默认20条
-        if len(args) == 0:
+        """
+        try to receive the arguments
+        """
+        try:
+            status = args["status"]
+            a = 1
+        except KeyError:
+            a = 0
+        try:
+            site_id = args["site_id"]
+            b = 2
+        except KeyError:
+            b = 0
+        try:
+            limit = args["limit"]
+            c = 4
+        except KeyError:
+            c = 0
+        s = a + b + c
+
+        if s == 0:
             publishList = Site.query.all()
             for item in range(len(publishList)):
                 publishList[item] = to_dict(publishList[item])
             for i in range(len(publishList)):
-                all_news_rows = News.query.filter(News.site_id == (i+1), News.status == 1)\
+                all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == 1) \
                     .order_by(News.datetime.desc(), News.id.desc()).limit(20).all()
                 all_news_list = []
                 for j in range(len(all_news_rows)):
@@ -41,105 +60,14 @@ class NewsApi(Resource):
                     all_news_list.append(all_news_dict)
                 publishList[i]["all_news"] = all_news_list
             return {"publishList": publishList}, 200
-        # 有参数的情况
-        if len(args) > 0:
-            # 有status的情况
-            if "status" in args:
-                status = args["status"]
-                # 有status和site_id的情况
-                if "site_id" in args:
-                    site_id = args["site_id"]
-                    # 有status，site_id和limit参数的情况
-                    if "limit" in args:
-                        limit = args["limit"]
-                        all_news_rows = News.query.filter(News.site_id == site_id, News.status == status)\
-                            .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
-                        all_news_list = []
-                        for j in range(len(all_news_rows)):
-                            all_news_dict = {
-                                "id": all_news_rows[j].id,
-                                "title": all_news_rows[j].title,
-                                "link": all_news_rows[j].link,
-                                "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                                "site_id": all_news_rows[j].site_id
-                            }
-                            all_news_list.append(all_news_dict)
-                        return {"publishList": all_news_list}, 200
-                    # 有status，site_id，没有limit参数的情况， 默认为10条新闻
-                    all_news_rows = News.query.filter(News.site_id == site_id, News.status == status) \
-                        .order_by(News.datetime.desc(), News.id.desc()).limit(10).all()
-                    all_news_list = []
-                    for j in range(len(all_news_rows)):
-                        all_news_dict = {
-                            "id": all_news_rows[j].id,
-                            "title": all_news_rows[j].title,
-                            "link": all_news_rows[j].link,
-                            "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                            "site_id": all_news_rows[j].site_id
-                        }
-                        all_news_list.append(all_news_dict)
-                    return {"publishList": all_news_list}, 200
-                # 有status,没有site_id,有limit的情况
-                if "limit" in args:
-                    limit = args["limit"]
-                    publishList = Site.query.all()
-                    for item in range(len(publishList)):
-                        publishList[item] = to_dict(publishList[item])
-                    for i in range(len(publishList)):
-                        all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == status) \
-                            .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
-                        all_news_list = []
-                        for j in range(len(all_news_rows)):
-                            all_news_dict = {
-                                "id": all_news_rows[j].id,
-                                "title": all_news_rows[j].title,
-                                "link": all_news_rows[j].link,
-                                "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                                "site_id": all_news_rows[j].site_id
-                            }
-                            all_news_list.append(all_news_dict)
-                        publishList[i]["all_news"] = all_news_list
-                    return {"publishList": publishList}, 200
-                # 有status,没有site_id和limit的情况，默认10条新闻
-                publishList = Site.query.all()
-                for item in range(len(publishList)):
-                    publishList[item] = to_dict(publishList[item])
-                for i in range(len(publishList)):
-                    all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == status) \
-                        .order_by(News.datetime.desc(), News.id.desc()).limit(10).all()
-                    all_news_list = []
-                    for j in range(len(all_news_rows)):
-                        all_news_dict = {
-                            "id": all_news_rows[j].id,
-                            "title": all_news_rows[j].title,
-                            "link": all_news_rows[j].link,
-                            "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                            "site_id": all_news_rows[j].site_id
-                        }
-                        all_news_list.append(all_news_dict)
-                    publishList[i]["all_news"] = all_news_list
-                return {"publishList": publishList}, 200
-            # 没有status,有site_id, limit的情况，默认0
-            if "site_id" in args:
-                site_id = args["site_id"]
-                if "limit" in args:
-                    limit = args["limit"]
-                    all_news_rows = News.query.filter(News.site_id == site_id, News.status == 0) \
-                        .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
-                    all_news_list = []
-                    for j in range(len(all_news_rows)):
-                        all_news_dict = {
-                            "id": all_news_rows[j].id,
-                            "title": all_news_rows[j].title,
-                            "link": all_news_rows[j].link,
-                            "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                            "site_id": all_news_rows[j].site_id
-                        }
-                        all_news_list.append(all_news_dict)
-                    return {"publishList": all_news_list}, 200
-                # 没有status,有site_id, 没有limit的情况
-                all_news_rows = News.query.filter(News.site_id == site_id, News.status == 0) \
-                    .order_by(News.datetime.desc(), News.id.desc()).limit(10).all()
+
+        elif s == 1:
+            publishList = Site.query.all()
+            for item in range(len(publishList)):
+                publishList[item] = to_dict(publishList[item])
+            for i in range(len(publishList)):
+                all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == status) \
+                    .order_by(News.datetime.desc(), News.id.desc()).limit(20).all()
                 all_news_list = []
                 for j in range(len(all_news_rows)):
                     all_news_dict = {
@@ -150,14 +78,33 @@ class NewsApi(Resource):
                         "site_id": all_news_rows[j].site_id
                     }
                     all_news_list.append(all_news_dict)
-                return {"publishList": all_news_list}, 200
-            # 没有status, 没有site_id, 有limit的情况
-            limit = args["limit"]
+                publishList[i]["all_news"] = all_news_list
+            return {"publishList": publishList}, 200
+
+        elif s == 2:
+            publishList = Site.query.filter(Site.id == site_id).first()
+            publishList = to_dict(publishList)
+            all_news_rows = News.query.filter(News.site_id == site_id, News.status == 1) \
+                .order_by(News.datetime.desc(), News.id.desc()).limit(20).all()
+            all_news_list = []
+            for j in range(len(all_news_rows)):
+                all_news_dict = {
+                    "id": all_news_rows[j].id,
+                    "title": all_news_rows[j].title,
+                    "link": all_news_rows[j].link,
+                    "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                    "site_id": all_news_rows[j].site_id
+                }
+                all_news_list.append(all_news_dict)
+            publishList["all_news"] = all_news_list
+            return {"publishList": publishList}, 200
+
+        elif s == 4:
             publishList = Site.query.all()
             for item in range(len(publishList)):
                 publishList[item] = to_dict(publishList[item])
             for i in range(len(publishList)):
-                all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == 0) \
+                all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == 1) \
                     .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
                 all_news_list = []
                 for j in range(len(all_news_rows)):
@@ -170,6 +117,80 @@ class NewsApi(Resource):
                     }
                     all_news_list.append(all_news_dict)
                 publishList[i]["all_news"] = all_news_list
+            return {"publishList": publishList}, 200
+
+        elif s == 3:
+            publishList = Site.query.filter(Site.id == site_id).first()
+            publishList = to_dict(publishList)
+            all_news_rows = News.query.filter(News.site_id == site_id, News.status == status) \
+                .order_by(News.datetime.desc(), News.id.desc()).limit(20).all()
+            all_news_list = []
+            for j in range(len(all_news_rows)):
+                all_news_dict = {
+                    "id": all_news_rows[j].id,
+                    "title": all_news_rows[j].title,
+                    "link": all_news_rows[j].link,
+                    "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                    "site_id": all_news_rows[j].site_id
+                }
+                all_news_list.append(all_news_dict)
+            publishList["all_news"] = all_news_list
+            return {"publishList": publishList}, 200
+
+        elif s == 5:
+            publishList = Site.query.all()
+            for item in range(len(publishList)):
+                publishList[item] = to_dict(publishList[item])
+            for i in range(len(publishList)):
+                all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == status) \
+                    .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
+                all_news_list = []
+                for j in range(len(all_news_rows)):
+                    all_news_dict = {
+                        "id": all_news_rows[j].id,
+                        "title": all_news_rows[j].title,
+                        "link": all_news_rows[j].link,
+                        "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                        "site_id": all_news_rows[j].site_id
+                    }
+                    all_news_list.append(all_news_dict)
+                publishList[i]["all_news"] = all_news_list
+            return {"publishList": publishList}, 200
+
+        elif s == 6:
+            publishList = Site.query.filter(Site.id == site_id).first()
+            publishList = to_dict(publishList)
+            all_news_rows = News.query.filter(News.site_id == site_id, News.status == 1) \
+                .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
+            all_news_list = []
+            for j in range(len(all_news_rows)):
+                all_news_dict = {
+                    "id": all_news_rows[j].id,
+                    "title": all_news_rows[j].title,
+                    "link": all_news_rows[j].link,
+                    "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                    "site_id": all_news_rows[j].site_id
+                }
+                all_news_list.append(all_news_dict)
+            publishList["all_news"] = all_news_list
+            return {"publishList": publishList}, 200
+
+        else:
+            publishList = Site.query.filter(Site.id == site_id).first()
+            publishList = to_dict(publishList)
+            all_news_rows = News.query.filter(News.site_id == site_id, News.status == status) \
+                .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
+            all_news_list = []
+            for j in range(len(all_news_rows)):
+                all_news_dict = {
+                    "id": all_news_rows[j].id,
+                    "title": all_news_rows[j].title,
+                    "link": all_news_rows[j].link,
+                    "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                    "site_id": all_news_rows[j].site_id
+                }
+                all_news_list.append(all_news_dict)
+            publishList["all_news"] = all_news_list
             return {"publishList": publishList}, 200
 
     @staticmethod
@@ -218,6 +239,10 @@ class NewsApi(Resource):
 
     @auth.login_required
     def put(self):
+        """
+        change the news information
+        :return: success or error message
+        """
         response = request.get_json()
         if not User.is_super_admin():
             return {"error": "you have no rights to do that!"}
