@@ -43,7 +43,7 @@ class User(db.Model):
         """
         return custom_app_context.verify(password, self.password_hash)
 
-    def generate_auth_token(self, expiration=600):
+    def generate_auth_token(self, expiration=3600):
         """
         generate a new token
         :param expiration: duration

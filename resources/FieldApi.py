@@ -10,14 +10,12 @@ class FieldApi(Resource):
     """
     check and change the field information
     """
-    @auth.login_required
-    def get(self):
+    @staticmethod
+    def get():
         """
         get all the fields
         :return: dict
         """
-        if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
         fields_list = Field.query.all()
         for i in range(len(fields_list)):
             fields_list[i] = to_dict(fields_list[i])
