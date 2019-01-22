@@ -9,6 +9,7 @@ from resources.UserApi import UserApi
 from resources.AuthApi import AuthAPI
 from resources.FieldApi import FieldApi
 from resources.CountApi import CounterApi
+from resources.SiteApi import SitedApi
 
 
 app = Flask(__name__)
@@ -34,6 +35,7 @@ api.add_resource(UserApi, '/api/v0/user')
 api.add_resource(AuthAPI, '/api/v0/auth')
 api.add_resource(FieldApi, '/api/v0/field')
 api.add_resource(CounterApi, '/api/v0/counter')
+api.add_resource(SitedApi, '/api/v0/site')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
