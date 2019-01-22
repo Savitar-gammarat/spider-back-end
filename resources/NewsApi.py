@@ -208,7 +208,7 @@ class NewsApi(Resource):
                     "click": all_news_rows[j].click,
                     "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                     "site_id": all_news_rows[j].site_id,
-                    "news_backref": news_backref
+                    "selectedFields": news_backref
                 }
                 all_news_list.append(all_news_dict)
             publishList["all_news"] = all_news_list
@@ -243,11 +243,11 @@ class NewsApi(Resource):
         try:
             response = request.get_json()
             news_id = response["news_id"]
-            field_id_list = response["field_id_list"]
+            field_name_list = response["field_name_list"]
             news = News.query.filter(News.id == news_id).first()
             field = []
-            for i in field_id_list:
-                check_field = Field.query.filter(Field.id == i).first()
+            for i in field_name_list:
+                check_field = Field.query.filter(Field.field == i).first()
                 if check_field is None:
                     return {"error": "please check the field list!"}, 403
                 field.append(check_field)
