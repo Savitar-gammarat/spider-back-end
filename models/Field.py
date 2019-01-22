@@ -13,4 +13,5 @@ class Field(db.Model):
 
     field = db.Column(db.String(60), nullable=False)
 
-    field_news = db.relationship('News', secondary=news_field)
+    field_news = db.relationship('News', secondary=news_field, backref=db.backref('fields', lazy='dynamic'))
+

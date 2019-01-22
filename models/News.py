@@ -28,4 +28,4 @@ class News(db.Model):
 
     keywords = db.relationship('Keyword', secondary=news_keyword)
 
-    fields = db.relationship('Field', secondary=news_field)
+    # fields = db.relationship('Field', secondary=news_field)

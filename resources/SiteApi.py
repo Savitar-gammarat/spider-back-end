@@ -10,16 +10,15 @@ class SitedApi(Resource):
     """
     check and change the site information
     """
-    @auth.login_required
-    def get(self):
+    @staticmethod
+    def get():
         """
         get all the sites
         :return: dict
         """
-        if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+        # if not User.is_super_admin():
+        #     return {"error": "you have no rights to do that!"}
         sites_list = Site.query.all()
-        print(sites_list)
         all_sites_list = []
         for j in range(len(sites_list)):
             all_sites_dict = {
