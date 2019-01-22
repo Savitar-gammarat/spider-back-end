@@ -10,8 +10,8 @@ class SitedApi(Resource):
     """
     check and change the site information
     """
-    @staticmethod
-    def get():
+    @auth.login_required
+    def get(self):
         """
         get all the sites
         :return: dict
