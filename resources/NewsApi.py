@@ -54,6 +54,8 @@ class NewsApi(Resource):
                         "id": all_news_rows[j].id,
                         "title": all_news_rows[j].title,
                         "link": all_news_rows[j].link,
+                        "status": all_news_rows[j].status,
+                        "click": all_news_rows[j].click,
                         "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                         "site_id": all_news_rows[j].site_id
                     }
@@ -74,6 +76,8 @@ class NewsApi(Resource):
                         "id": all_news_rows[j].id,
                         "title": all_news_rows[j].title,
                         "link": all_news_rows[j].link,
+                        "status": all_news_rows[j].status,
+                        "click": all_news_rows[j].click,
                         "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                         "site_id": all_news_rows[j].site_id
                     }
@@ -92,6 +96,8 @@ class NewsApi(Resource):
                     "id": all_news_rows[j].id,
                     "title": all_news_rows[j].title,
                     "link": all_news_rows[j].link,
+                    "status": all_news_rows[j].status,
+                    "click": all_news_rows[j].click,
                     "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                     "site_id": all_news_rows[j].site_id
                 }
@@ -112,6 +118,8 @@ class NewsApi(Resource):
                         "id": all_news_rows[j].id,
                         "title": all_news_rows[j].title,
                         "link": all_news_rows[j].link,
+                        "status": all_news_rows[j].status,
+                        "click": all_news_rows[j].click,
                         "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                         "site_id": all_news_rows[j].site_id
                     }
@@ -130,6 +138,8 @@ class NewsApi(Resource):
                     "id": all_news_rows[j].id,
                     "title": all_news_rows[j].title,
                     "link": all_news_rows[j].link,
+                    "status": all_news_rows[j].status,
+                    "click": all_news_rows[j].click,
                     "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                     "site_id": all_news_rows[j].site_id
                 }
@@ -150,6 +160,8 @@ class NewsApi(Resource):
                         "id": all_news_rows[j].id,
                         "title": all_news_rows[j].title,
                         "link": all_news_rows[j].link,
+                        "status": all_news_rows[j].status,
+                        "click": all_news_rows[j].click,
                         "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                         "site_id": all_news_rows[j].site_id
                     }
@@ -168,6 +180,8 @@ class NewsApi(Resource):
                     "id": all_news_rows[j].id,
                     "title": all_news_rows[j].title,
                     "link": all_news_rows[j].link,
+                    "status": all_news_rows[j].status,
+                    "click": all_news_rows[j].click,
                     "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
                     "site_id": all_news_rows[j].site_id
                 }
@@ -182,12 +196,19 @@ class NewsApi(Resource):
                 .order_by(News.datetime.desc(), News.id.desc()).limit(limit).all()
             all_news_list = []
             for j in range(len(all_news_rows)):
+                news_backref = all_news_rows[j].fields.all()
+                if news_backref is not None:
+                    for i in range(len(news_backref)):
+                        news_backref[i] = news_backref[i].field
                 all_news_dict = {
                     "id": all_news_rows[j].id,
                     "title": all_news_rows[j].title,
                     "link": all_news_rows[j].link,
+                    "status": all_news_rows[j].status,
+                    "click": all_news_rows[j].click,
                     "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                    "site_id": all_news_rows[j].site_id
+                    "site_id": all_news_rows[j].site_id,
+                    "news_backref": news_backref
                 }
                 all_news_list.append(all_news_dict)
             publishList["all_news"] = all_news_list
@@ -231,6 +252,7 @@ class NewsApi(Resource):
                     return {"error": "please check the field list!"}, 403
                 field.append(check_field)
             news.fields = field
+            news.status = 1
             db.session.add(news)
             db.session.commit()
         except KeyError:
