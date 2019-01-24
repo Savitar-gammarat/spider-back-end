@@ -39,6 +39,7 @@ class AuthAPI(Resource):
             return {"error": "Username doesn't exist"}, 404
         if not user.verify_password(password):
             return {"error": "Wrong password"}, 403
+        last_login = user.last_login_time.strftime("%Y-%m-%d %H:%M:%S")
         user.last_login_time = datetime.now()
         db.session.commit()
         token = user.generate_auth_token()
@@ -50,6 +51,8 @@ class AuthAPI(Resource):
                     "id": user["id"],
                     "username": user["username"],
                     "email": user["email"],
+                    "last_login_time": user["last_login_time"],
+                    "last_login": last_login
                 }
             }, 201
         return {
@@ -58,6 +61,8 @@ class AuthAPI(Resource):
                 "id": user["id"],
                 "username": user["username"],
                 "email": user["email"],
-                "customization": user["customization"]
+                "customization": user["customization"],
+                "last_login_time": user["last_login_time"],
+                "last_login": last_login
             }
         }, 201

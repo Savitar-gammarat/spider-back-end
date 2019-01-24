@@ -8,6 +8,7 @@ from models.Keyword import Keyword
 from resources.AuthApi import auth
 from models.Secondary import news_field
 from models.User import User
+from datetime import datetime
 
 
 class NewsApi(Resource):
@@ -39,7 +40,12 @@ class NewsApi(Resource):
             c = 4
         except KeyError:
             c = 0
-        s = a + b + c
+        try:
+            date = args["date"]
+            d = 100
+        except KeyError:
+            d = 0
+        s = a + b + c + d
 
         if s == 0:
             publishList = Site.query.all()
@@ -188,6 +194,33 @@ class NewsApi(Resource):
                 all_news_list.append(all_news_dict)
             publishList["all_news"] = all_news_list
             return {"publishList": publishList}, 200
+
+        elif s == 100:
+            today = datetime.now().strftime("%Y-%m-%d")
+            publishList = Site.query.all()
+            all_news = []
+            for i in range(len(publishList)):
+                all_news_rows = News.query.filter(News.site_id == (i+1), News.status == 0, News.datetime > today) \
+                    .order_by(News.datetime.desc(), News.id.desc()).all()
+                for j in range(len(all_news_rows)):
+                    news_backref = all_news_rows[j].fields.all()
+                    if news_backref is not None:
+                        for k in range(len(news_backref)):
+                            news_backref[k] = news_backref[k].field
+                    all_news_dict = {
+                        "id": all_news_rows[j].id,
+                        "title": all_news_rows[j].title,
+                        "link": all_news_rows[j].link,
+                        "status": all_news_rows[j].status,
+                        "click": all_news_rows[j].click,
+                        "datetime": all_news_rows[j].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                        "site_id": all_news_rows[j].site_id,
+                        "selectedFields": news_backref
+                    }
+                    all_news.append(all_news_dict)
+            length = len(all_news)
+            all_news = all_news[:10]
+            return {"length": length, "publishList": all_news}, 200
 
         else:
             publishList = Site.query.filter(Site.id == site_id).first()
