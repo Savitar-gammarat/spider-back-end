@@ -1,10 +1,13 @@
 from flask_restful import Resource
 from flask import request
-from configs.database import to_dict
+from configs.database import to_dict, db
 from models.News import News
 from models.Keyword import Keyword
 from models.Secondary import news_keyword
 from models.Site import Site
+from resources.AuthApi import auth
+from models.Field import Field
+from models.User import User
 
 
 class SearchApi(Resource):
@@ -54,3 +57,35 @@ class SearchApi(Resource):
                        "search_item": search_item
                    }, 406
         return {"search_item": search_item}, 200
+
+    @auth.login_required
+    def put(self):
+        """
+        search the news by id
+        :return: news or change news
+        """
+        if not User.is_super_admin():
+            return {"error": "you have no rights to do that!"}
+        try:
+            response = request.get_json()
+            news_id = response["news_id"]
+        except KeyError:
+            return {"error": "lack necessary key"}, 406
+        news = News.query.filter(News.id == news_id).first()
+        if news is None:
+            return {"error": "there is no such news"}, 403
+        news_backref = news.fields.all()
+        if news_backref is not None:
+            for i in range(len(news_backref)):
+                news_backref[i] = news_backref[i].field
+        all_news_dict = {
+            "id": news.id,
+            "title": news.title,
+            "link": news.link,
+            "status": news.status,
+            "click": news.click,
+            "datetime": news.datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            "site_id": news.site_id,
+            "selectedFields": news_backref
+        }
+        return {"publishList": [all_news_dict]}, 201
