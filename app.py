@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
+from flask_compress import Compress
 from configs.config import (DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PASSWORD)
 from configs.database import db
 from resources.NewsApi import NewsApi
@@ -14,6 +15,7 @@ from resources.SiteApi import SitedApi
 
 app = Flask(__name__)
 CORS(app)
+Compress(app)
 api = Api(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = \
     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_SCHEMA}"
