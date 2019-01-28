@@ -29,5 +29,5 @@ class FieldAnalysisApi(Resource):
                 "name": fields_list[i]
             }
             data.append(data_dict)
-        return {"fields": fields_list, "data": data}, 200
+        return {"fieldAnalysis": {"fields": fields_list, "data": data}}, 200
 
