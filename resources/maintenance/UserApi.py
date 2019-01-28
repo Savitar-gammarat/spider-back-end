@@ -3,7 +3,7 @@ from flask import request, g
 from configs.database import db
 from models.User import User
 from datetime import datetime
-from resources.AuthApi import auth
+from resources.maintenance.AuthApi import auth
 
 
 class UserApi(Resource):

@@ -4,13 +4,15 @@ from flask_cors import CORS
 from flask_compress import Compress
 from configs.config import (DB_HOST, DB_PORT, DB_SCHEMA, DB_USER, DB_PASSWORD)
 from configs.database import db
-from resources.NewsApi import NewsApi
-from resources.SearchApi import SearchApi
-from resources.UserApi import UserApi
-from resources.AuthApi import AuthAPI
-from resources.FieldApi import FieldApi
-from resources.CountApi import CounterApi
-from resources.SiteApi import SitedApi
+from resources.maintenance.NewsApi import NewsApi
+from resources.maintenance.SearchApi import SearchApi
+from resources.maintenance.UserApi import UserApi
+from resources.maintenance.AuthApi import AuthAPI
+from resources.maintenance.FieldApi import FieldApi
+from resources.maintenance.CountApi import CounterApi
+from resources.maintenance.SiteApi import SitedApi
+from resources.analysis.LoginAnalysisApi import LoginAnalysisApi
+from resources.analysis.FieldAnalysisApi import FieldAnalysisApi
 
 
 app = Flask(__name__)
@@ -38,6 +40,8 @@ api.add_resource(AuthAPI, '/api/v0/auth')
 api.add_resource(FieldApi, '/api/v0/field')
 api.add_resource(CounterApi, '/api/v0/counter')
 api.add_resource(SitedApi, '/api/v0/site')
+api.add_resource(LoginAnalysisApi, '/api/v0/loginanalysis')
+api.add_resource(FieldAnalysisApi, '/api/v0/fieldanalysis')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

@@ -3,6 +3,7 @@ from models.Counter import Counter
 from datetime import datetime
 from configs.database import db
 
+
 class CounterApi(Resource):
     """
     :return counts

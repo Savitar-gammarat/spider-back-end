@@ -1,5 +1,6 @@
 from configs.database import db
-from models.Secondary import news_keyword, news_field
+from models.Keyword import Keyword
+from models.Secondary import news_keyword
 import datetime
 
 

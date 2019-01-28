@@ -4,9 +4,7 @@ from configs.database import to_dict, db
 from models.News import News
 from models.Site import Site
 from models.Field import Field
-from models.Keyword import Keyword
-from resources.AuthApi import auth
-from models.Secondary import news_field
+from resources.maintenance.AuthApi import auth
 from models.User import User
 from datetime import datetime
 

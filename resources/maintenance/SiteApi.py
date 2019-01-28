@@ -1,9 +1,5 @@
 from flask_restful import Resource
-from flask import request
-from configs.database import to_dict, db
 from models.Site import Site
-from models.User import User
-from resources.AuthApi import auth
 
 
 class SitedApi(Resource):

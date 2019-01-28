@@ -1,12 +1,9 @@
 from flask_restful import Resource
 from flask import request
-from configs.database import to_dict, db
+from configs.database import to_dict
 from models.News import News
-from models.Keyword import Keyword
-from models.Secondary import news_keyword
 from models.Site import Site
-from resources.AuthApi import auth
-from models.Field import Field
+from resources.maintenance.AuthApi import auth
 from models.User import User
 
 

@@ -3,7 +3,7 @@ from flask import request
 from configs.database import to_dict, db
 from models.Field import Field
 from models.User import User
-from resources.AuthApi import auth
+from resources.maintenance.AuthApi import auth
 
 
 class FieldApi(Resource):
