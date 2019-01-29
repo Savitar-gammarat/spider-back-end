@@ -62,7 +62,7 @@ class SearchApi(Resource):
         :return: news or change news
         """
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         try:
             response = request.get_json()
             news_id = response["news_id"]

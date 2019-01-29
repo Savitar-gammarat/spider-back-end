@@ -29,7 +29,7 @@ class FieldApi(Resource):
         """
         response = request.get_json()
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         try:
             field_id = response["field_id"]
             field_name = response["field_name"]
@@ -51,7 +51,7 @@ class FieldApi(Resource):
         """
         response = request.get_json()
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         try:
             field_name = response["field_name"]
         except KeyError:
@@ -73,7 +73,7 @@ class FieldApi(Resource):
         :return: success or error message
         """
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         json = request.get_json()
         try:
             field = Field.query.filter(Field.id == json["field_id"]).first()

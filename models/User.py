@@ -78,7 +78,6 @@ class User(db.Model):
         super_admin = User.query.filter(User.username == SUPER_ADMIN).all()
         for i in range(len(super_admin)):
             super_admin[i] = super_admin[i].id
-        print(super_admin)
         if g.current_user.id in super_admin:
             return True
         return False

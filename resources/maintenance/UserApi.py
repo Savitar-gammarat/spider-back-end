@@ -53,7 +53,7 @@ class UserApi(Resource):
             user = User.query.filter(User.username == username).first()
             if not User.is_super_admin():
                 if not g.current_user.id == user.id:
-                    return {"error": "you have no rights to do that!"}, 403
+                    return {"error": "you have no rights to do that!"}, 401
             user.hash_password(password)
             db.session.commit()
         except KeyError:
@@ -73,7 +73,7 @@ class UserApi(Resource):
             user = User.query.filter(User.username == username).first()
             if not User.is_super_admin():
                 if not g.current_user.id == user.id:
-                    return {"error": "you have no rights to do that!"}, 403
+                    return {"error": "you have no rights to do that!"}, 401
             user.customization = customization
             db.session.commit()
             user = User.query.filter(User.username == username).first()
@@ -98,7 +98,7 @@ class UserApi(Resource):
         json = request.get_json()
         try:
             if not User.is_super_admin():
-                return {"error": "you have no rights to do that!"}
+                return {"error": "you have no rights to do that!"}, 401
             user = User.query.filter(User.username == json["username"]).first()
             if user is None:
                 return {"error": "There is no such username"}, 403

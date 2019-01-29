@@ -270,7 +270,7 @@ class NewsApi(Resource):
         :return: success or error message
         """
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         try:
             response = request.get_json()
             news_id = response["news_id"]
@@ -298,7 +298,7 @@ class NewsApi(Resource):
         """
         response = request.get_json()
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         try:
             news_id = response["news_id"]
             news_title = response["title"]
@@ -322,7 +322,7 @@ class NewsApi(Resource):
         :return: success or error
         """
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         json = request.get_json()
         try:
             news = News.query.filter(News.id == json["news_id"]).first()

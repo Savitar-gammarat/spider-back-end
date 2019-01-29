@@ -7,5 +7,5 @@ class Test(Resource):
     @auth.login_required
     def get(self):
         if not User.is_super_admin():
-            return {"error": "you have no rights to do that!"}
+            return {"error": "you have no rights to do that!"}, 401
         return {"message": "success"}, 201
