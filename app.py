@@ -42,6 +42,7 @@ api.add_resource(FieldApi, '/api/v0/field')
 api.add_resource(CounterApi, '/api/v0/counter')
 api.add_resource(SitedApi, '/api/v0/site')
 api.add_resource(LoginAnalysisApi, '/api/v0/loginanalysis')
+api.add_resource(FieldAnalysisApi, '/api/v0/fieldAnalysis')
 api.add_resource(Test, '/api/v0/test')
 
 if __name__ == '__main__':
