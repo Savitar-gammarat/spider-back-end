@@ -10,6 +10,16 @@ class UserApi(Resource):
     """
     change or query user information
     """
+
+    @staticmethod
+    def get():
+        """
+        get the user information
+        :return: success or error message
+        """
+        counts = User.query.count()
+        return {"counts": counts}, 200
+
     @staticmethod
     def post():
         """
