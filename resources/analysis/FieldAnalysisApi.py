@@ -7,7 +7,6 @@ from models.News import News
 
 
 class FieldAnalysisApi(Resource):
-
     @staticmethod
     def get():
         """
