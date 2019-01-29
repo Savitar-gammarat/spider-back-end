@@ -39,7 +39,9 @@ class AuthAPI(Resource):
             return {"error": "Username doesn't exist"}, 404
         if not user.verify_password(password):
             return {"error": "Wrong password"}, 403
-        last_login = user.last_login_time.strftime("%Y-%m-%d %H:%M:%S")
+        last_login = user.last_login_time
+        if last_login is not None:
+            last_login = last_login.strftime("%Y-%m-%d %H:%M:%S")
         user.last_login_time = datetime.now()
         db.session.commit()
         token = user.generate_auth_token()
