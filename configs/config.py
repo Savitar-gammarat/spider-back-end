@@ -1,5 +1,6 @@
+from flask_caching import Cache
 """
-THE PATH OF THE DATABASE
+THE PATH OF THE MYSQL DATABASE
 """
 DB_USER = "root"
 DB_PASSWORD = "991004"
@@ -16,3 +17,11 @@ SECRET_KEY = "Trump-eat-chicken"
 SUPER_ADMIN, something important!
 """
 SUPER_ADMIN = ["bigdingding"]
+"""
+THE PATH OF THE REDIS DATABASE
+"""
+cache = Cache(config={
+  'CACHE_TYPE': 'redis',
+  'CACHE_REDIS_HOST': '101.132.161.133',
+  'CACHE_REDIS_PORT': 6379
+})

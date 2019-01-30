@@ -4,11 +4,12 @@ from datetime import datetime
 from configs.database import db, to_dict
 from models.Field import Field
 from models.News import News
+from configs.config import cache
 
 
 class FieldAnalysisApi(Resource):
-    @staticmethod
-    def get():
+    @cache.cached(timeout=600)
+    def get(self):
         """
         counts the number of news group by field
         :return: two list:field list and data list

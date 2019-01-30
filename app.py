@@ -15,6 +15,8 @@ from resources.test import Test
 from resources.analysis.LoginAnalysisApi import LoginAnalysisApi
 from resources.analysis.FieldAnalysisApi import FieldAnalysisApi
 from resources.analysis.SiteAnalysisApi import SiteAnalysisApi
+# from flask_caching import Cache
+from configs.config import cache
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +31,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = \
 # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:991004@47.101.196.53:3306/news-aggregation"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+
+cache.init_app(app)
 
 with app.app_context():
     db.init_app(app)    # init db
@@ -45,6 +49,7 @@ api.add_resource(LoginAnalysisApi, '/api/v0/loginanalysis')
 api.add_resource(FieldAnalysisApi, '/api/v0/fieldanalysis')
 api.add_resource(SiteAnalysisApi, '/api/v0/siteanalysis')
 api.add_resource(Test, '/api/v0/test')
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

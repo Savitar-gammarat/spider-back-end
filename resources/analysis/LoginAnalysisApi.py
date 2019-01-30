@@ -2,14 +2,16 @@ from flask_restful import Resource
 from models.Counter import Counter
 from datetime import datetime
 from configs.database import db, to_dict
+from configs.config import cache
 
 
 class LoginAnalysisApi(Resource):
     """
     :return counts
     """
-    @staticmethod
-    def get():
+
+    @cache.cached(timeout=600)
+    def get(self):
         """
         counts the number of view counts group by time
         :return: two list:time list and number list

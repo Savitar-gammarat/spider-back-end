@@ -4,11 +4,12 @@ from datetime import datetime
 from configs.database import db, to_dict
 from models.Site import Site
 from models.News import News
+from configs.config import cache
 
 
 class SiteAnalysisApi(Resource):
-    @staticmethod
-    def get():
+    @cache.cached(timeout=600)
+    def get(self):
         """
         counts the number of news group by site
         :return: two list:field list and data list
