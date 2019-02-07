@@ -10,7 +10,7 @@ class LoginAnalysisApi(Resource):
     :return counts
     """
 
-    @cache.cached(timeout=600)
+    @cache.cached(timeout=300)
     def get(self):
         """
         counts the number of view counts group by time
