@@ -2,6 +2,7 @@ from configs.database import db
 from models.Keyword import Keyword
 from models.Secondary import news_keyword
 import datetime
+from configs.config import cache
 
 
 class News(db.Model):
@@ -30,3 +31,21 @@ class News(db.Model):
     keywords = db.relationship('Keyword', secondary=news_keyword)
 
     # fields = db.relationship('Field', secondary=news_field)
+
+    @staticmethod
+    @cache.cached(timeout=3600, key_prefix='all_news')
+    def all_news():
+        """
+        :return: all news
+        """
+        all_news = News.query.all()
+        return all_news
+
+    @staticmethod
+    @cache.cached(timeout=3600, key_prefix='latest_news')
+    def latest_news():
+        """
+        :return: latest 10000 news
+        """
+        latest_news = News.query.order_by(News.id.desc(), News.datetime.desc()).limit(10000).all()
+        return latest_news
