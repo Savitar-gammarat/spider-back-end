@@ -16,4 +16,5 @@ class Keyword(db.Model):
 
     datetime = db.Column(db.TIMESTAMP(), nullable=False, default=datetime.datetime.now)
 
-    key_news = db.relationship('News', secondary=news_keyword)
+    key_news = db.relationship('News', secondary=news_keyword, backref=db.backref('keywords', lazy='dynamic'),
+                               lazy='dynamic')

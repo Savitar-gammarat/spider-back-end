@@ -15,6 +15,7 @@ from resources.test import Test
 from resources.analysis.LoginAnalysisApi import LoginAnalysisApi
 from resources.analysis.FieldAnalysisApi import FieldAnalysisApi
 from resources.analysis.SiteAnalysisApi import SiteAnalysisApi
+from resources.analysis.KeywordsAnalysisApi import KeywordsAnalysisApi
 # from flask_caching import Cache
 from configs.config import cache
 
@@ -48,6 +49,7 @@ api.add_resource(SitedApi, '/api/v0/site')
 api.add_resource(LoginAnalysisApi, '/api/v0/loginanalysis')
 api.add_resource(FieldAnalysisApi, '/api/v0/fieldanalysis')
 api.add_resource(SiteAnalysisApi, '/api/v0/siteanalysis')
+api.add_resource(KeywordsAnalysisApi, '/api/v0/keywordsanalysis')
 api.add_resource(Test, '/api/v0/test')
 
 

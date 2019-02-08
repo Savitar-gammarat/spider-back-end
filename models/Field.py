@@ -14,7 +14,8 @@ class Field(db.Model):
 
     field = db.Column(db.String(60), nullable=False)
 
-    field_news = db.relationship('News', secondary=news_field, backref=db.backref('fields', lazy='dynamic'), lazy='dynamic')
+    field_news = db.relationship('News', secondary=news_field, backref=db.backref('fields', lazy='dynamic'),
+                                 lazy='dynamic')
 
     @staticmethod
     # @cache.cached(timeout=60, key_prefix='all_fields')
