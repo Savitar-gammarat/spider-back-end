@@ -40,13 +40,6 @@ class LoginAnalysisApi(Resource):
             else:
                 counter += 1
         y.append(counter)
-        # for j in range(len(x)-1):
-        #     time_a = datetime.strptime(x[j], '%Y/%m/%d')
-        #     time_b = datetime.strptime(x[j+1], '%Y/%m/%d')
-        #     interval = (time_b - time_a).days
-        #     if interval > 1:
-        #         time_c = timedelta(days=1) + time_a
-        #         x.insert((j+1), time_c.strftime('%Y/%m/%d'))
         return {
             "loginAnalysis": {
                 "x": x, "y": y
