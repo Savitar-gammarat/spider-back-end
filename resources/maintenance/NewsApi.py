@@ -218,7 +218,8 @@ class NewsApi(Resource):
                     all_news.append(all_news_dict)
             length = len(all_news)
             all_news = all_news[:10]
-            return {"length": length, "publishList": all_news}, 200
+            pre_length = News.query.filter(News.status == 0,News.datetime < today).count()
+            return {"length": length, "publishList": all_news,"pre_length": pre_length}, 200
 
         else:
             publishList = Site.query.filter(Site.id == site_id).first()
