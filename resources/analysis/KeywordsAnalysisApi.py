@@ -7,6 +7,7 @@ from models.Site import Site
 from models.News import News
 from configs.config import cache
 from flask import request
+import jieba
 
 
 class KeywordsAnalysisApi(Resource):
@@ -60,3 +61,69 @@ class KeywordsAnalysisApi(Resource):
             series.append({'type': 'bar', 'xAxisIndex': 1, 'yAxisIndex': 1})
         site_name = Site.query.filter(Site.id == site_id).first().name
         return {"source": source, "series": series, "site_name": site_name}, 200
+
+    @staticmethod
+    def get():
+        try:
+            args = request.args
+            seg = args["keyword"]
+        except KeyError:
+            return {"error": "lack necessary argument!"}, 406
+        seg_list = jieba.cut(seg, cut_all=False)
+        msg_list = []
+        options = []
+        for seg in seg_list:
+            msg_list.append(seg)
+        try:
+            keyword_news = Keyword.query.filter(Keyword.keyword.in_(msg_list)).first().key_news.all()
+        except AttributeError:
+            return {"error": "there is no such keywords!"}, 403
+        for key in msg_list:
+            keyword_news_list = Keyword.query.filter(Keyword.keyword == key).first()
+            if keyword_news_list is None:
+                break
+            else:
+                keyword_news_list = keyword_news_list.key_news.all()
+                x = []
+                y = []
+                length = len(keyword_news_list)
+                count = 0
+                for i in range(length):
+                    news = keyword_news_list[i]
+                    news_time = news.datetime.strftime("%Y-%m-%d")
+                    if news_time not in x:
+                        x.append(news_time)
+                        if count != 0:
+                            y.append(count)
+                        count = 1
+                    else:
+                        count += 1
+                y.append(count)
+            options.append({
+                'option': {
+                    'title': {
+                        'text': '全站点关键字<'+key+'>出现频率',
+                        'subtext': '新闻数量以网站所展现新闻为基准',
+                    },
+                    'tooltip': {
+                        'trigger': 'axis',
+                        'axisPointer': {
+                            'type': 'shadow'
+                        }
+                    },
+                    'xAxis': {
+                        'type': 'category',
+                        'data': x
+                    },
+                    'yAxis': {
+                        'type': 'value'
+                    },
+                    'series': [{
+                        'data': y,
+                        'type': 'line',
+                        'smooth': 'true'
+                    }]
+                }
+            })
+        time = datetime.now().strftime("%Y-%m-%d")
+        return {'data': {"options": options, "datetime": time}}, 200
