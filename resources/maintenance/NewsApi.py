@@ -51,7 +51,7 @@ class NewsApi(Resource):
                 publishList[item] = to_dict(publishList[item])
             for i in range(len(publishList)):
                 all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == 1) \
-                    .order_by(News.datetime.desc(), News.id.desc()).limit(20).all()
+                    .order_by(News.id.desc(), News.datetime.desc()).limit(20).all()
                 all_news_list = []
                 for j in range(len(all_news_rows)):
                     all_news_dict = {
@@ -218,7 +218,8 @@ class NewsApi(Resource):
                     all_news.append(all_news_dict)
             length = len(all_news)
             all_news = all_news[:10]
-            return {"length": length, "publishList": all_news}, 200
+            pre_length = News.query.filter(News.status == 0,News.datetime < today).count()
+            return {"length": length, "publishList": all_news,"pre_length": pre_length}, 200
 
         else:
             publishList = Site.query.filter(Site.id == site_id).first()
@@ -257,8 +258,8 @@ class NewsApi(Resource):
             news_id = response["news_id"]
         except KeyError:
             return {"error": "lack necessary argument!"}, 406
-        more_news = News.query.filter(News.site_id == site_id, News.id < news_id, News.status == 1)\
-            .order_by(News.datetime.desc(), News.id.desc()).limit(20).all()
+        more_news = News.query.filter(News.site_id == site_id)\
+            .order_by(News.id.desc(), News.datetime.desc()).filter(News.id < news_id).limit(20).all()
         for i in range(len(more_news)):
             more_news[i] = to_dict(more_news[i])
         return {"more_news": more_news}, 200

@@ -5,6 +5,8 @@ from models.News import News
 from models.Site import Site
 from resources.maintenance.AuthApi import auth
 from models.User import User
+import jieba
+import re
 
 
 class SearchApi(Resource):
@@ -13,47 +15,31 @@ class SearchApi(Resource):
     """
     @staticmethod
     def get():
-        """
-        get all the news
-        :return: news in dict
-        """
-        news_list = News.query.all()
-        site_list = Site.query.all()
-        for item in range(len(news_list)):
-            news_list[item] = to_dict(news_list[item])
-        for site in range(len(site_list)):
-            site_list[site] = to_dict(site_list[site])
-        search_message_list = []
-        for i in range(len(news_list)):
-            for number in range(len(site_list)):
-                if news_list[i]["site_id"] == number+1:
-                    news_list[i]["site_name"] = site_list[number]["name"]
-            search_message_list.append(news_list[i]["site_name"] + ":" +
-                                       news_list[i]["title"])
-        return {"search_message_list": search_message_list}, 200
-
-    @staticmethod
-    def post():
-        """
-        get the specific news' url
-        :return: news' url
-        """
-        search_item = {}
         try:
-            response = request.get_json()
-            search_message = response["search_message"]
-            result = News.query.filter(News.title == search_message).all()
-            search_item["url"] = result[0].link
-            search_item["status"] = 0
+            args = request.args
+            seg = args["seg"]
         except KeyError:
-            return {"error": "lack necessary key"}, 406
-        except IndexError:
-            search_item["status"] = 1
-            return {
-                       "error": "there is no such news in database",
-                       "search_item": search_item
-                   }, 406
-        return {"search_item": search_item}, 200
+            return {"error": "lack necessary argument!"}, 406
+        seg_list = jieba.cut(seg, cut_all=False)
+        msg_list = []
+        result_list = []
+        for seg in seg_list:
+            msg_list.append(seg)
+        all_news = News.latest_news()
+        for i in range(len(all_news)):
+            for j in range(len(msg_list)):
+                status = re.match(msg_list[j], all_news[i].title)
+                if status is not None:
+                    result_list.append({
+                        "id": all_news[i].id,
+                        "title": all_news[i].title,
+                        "link": all_news[i].link,
+                        "click": all_news[i].click,
+                        "datetime": all_news[i].datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                        "site_id": all_news[i].site_id,
+                    })
+                    break
+        return {"all_news": result_list}, 200
 
     @auth.login_required
     def put(self):
