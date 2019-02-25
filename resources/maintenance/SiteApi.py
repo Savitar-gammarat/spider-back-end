@@ -17,7 +17,7 @@ class SitedApi(Resource):
         for j in range(len(sites_list)):
             all_sites_dict = {
                 "id": sites_list[j].id,
-                "name": sites_list[j].name
+                "name": sites_list[j].name,
                 "logo":sites_list[j].logo
             }
             all_sites_list.append(all_sites_dict)
