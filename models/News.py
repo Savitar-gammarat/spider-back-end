@@ -28,6 +28,8 @@ class News(db.Model):
 
     site_id = db.Column(db.Integer, db.ForeignKey('site.id'), nullable=False)
 
+    home = db.Column(db.Integer, nullable=True, default=1)
+
     # keywords = db.relationship('Keyword', secondary=news_keyword)
 
     # fields = db.relationship('Field', secondary=news_field)

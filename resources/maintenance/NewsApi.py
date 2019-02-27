@@ -50,8 +50,8 @@ class NewsApi(Resource):
             for item in range(len(publishList)):
                 publishList[item] = to_dict(publishList[item])
             for i in range(len(publishList)):
-                all_news_rows = News.query.filter(News.site_id == (i + 1), News.status == 1) \
-                    .order_by(News.id.desc(), News.datetime.desc()).limit(20).all()
+                all_news_rows = News.query.filter(News.site_id == (i + 1), News.home == 1) \
+                    .order_by(News.id.desc(), News.datetime.desc()).limit(40).all()
                 all_news_list = []
                 for j in range(len(all_news_rows)):
                     all_news_dict = {
